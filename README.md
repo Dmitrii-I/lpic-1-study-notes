@@ -4,13 +4,55 @@ lpic-1-study-notes
 Study notes for the LPIC-1 certificate  
   
 #### 101.1 Determine and configure hardware settings  
-  
 Enable and disable integrated peripherals.  
+- peripheral: a device put and extracts information from a computer
+- integrated peripherals: USB controllers, onboard LAN, floppy disk access controller, onboard serial port
+- external peripherals: mouse, keyboard, microphone
+- to disable: run `lspci -k` to get a list of hardware and associated kernel modules. Then disable using computer's firmware (BIOS/EFI) or with `rmmod`. If `rmmod` fails due to dependencies, put the module into `/etc/modprobe.d/blacklist.conf` and reboot
+
 Configure systems with or without external peripherals such as keyboards.  
+- PXE or BOOTP enable you to boot from network
+- if booting without keyboard, disable halting on errors in BIOS or EFI
+
 Differentiate between the various types of mass storage devices.  
+- `/dev/` shows available devices, typically designated by hd*, sd*, and fd*
+- a metadisk, aka RAID, can span multiple physical disks, and are designated by md*
+- loop devices: used to mount filesystems not associated with block-devices
+- RAM disks are designated by /dev/ram0, /dev/ram1, etc.
+- /dev/initrd is the initial RAM disk loaded by the bootloader. Newer kernels user /dev/ram0
+- `file --special-files /dev/sda` shows partitions and their startheads and startsectors
+- `hdparm`: get/set SATA/IDE device parameters
+- `hdparm -i /dev/sda` shows disk identification info which the kernel drivers (IDE, libata) have stored from boot/configuration time
+- `hdparm -g /dev/sda` shows disk geometry
+- `blkid`: locate/print block device attributes
+- `blkid /dev/sda3` shows UUID of a disk partition
+
 Set the correct hardware ID for different devices, especially the boot device.  
+- each device has a major and a minor device number
+- `ls -l /dev/sda` shows major and minor device number before date
+- major device number identifies the driver Linux is using
+- the minor number identifies device type
+- disks can also have a UUID associated with it
+- UUID: universally unique identifier, a 128 bit number
+- `ls -l /dev/dis/by-uuid` shows disks and their UUIDs
+- Normally you should not be required to change UUID, but if need be, use `tune2fs /dev/sda1 -U UUID`
+
 Know the differences between coldplug and hotplug devices.  
+- cold plus devices require the system to be powered off. E.g.: RAM, AGP, PCI, PATA
+- hot plug devices can be plugged into a running system: USB, Firewire, some SATA and SCSI devices
+
 Determine hardware resources for devices.  
+- IRQ: an interrupt request. A signal sent to the processor that temporarily stops a running program and allows an interrupt handler to run instead
+- IRQs are used by modems, NICs, keyboards, mice
+- /proc/interrupts shows cumulative number of interrupts per CPU per device during current boot session 
+- /proc/cpuinfo shows CPU info
+- /proc/devices lists major numbers and device groups
+- /proc/dma lists registered ISA DMA channels
+- /proc/ioports shows I/O ports, that is unique locations in memory that are reserved for communication between CPU and a device
+- /proc/modules shows modules loaded by the kernel
+- /proc/partitions contains major and minor numbers of each partition as well as number of blocks and partition name
+- `blockdev --getbsz /dev/sda5` to show block size of a partition
+
 Tools and utilities to list various hardware information (e.g. lsusb, lspci, etc.)  
 Tools and utilities to manipulate USB devices  
 Conceptual understanding of sysfs, udev, hald, dbus  
