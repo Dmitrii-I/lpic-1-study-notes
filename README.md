@@ -1,20 +1,21 @@
 lpic-1-study-notes  
 ==================  
   
-Study notes for the LPIC-1 certificate  
+# Study notes for the LPIC-1 certificate  
   
-#### 101.1 Determine and configure hardware settings  
-Enable and disable integrated peripherals.  
+### 101.1 Determine and configure hardware settings  
+
+##### Enable and disable integrated peripherals.  
 - peripheral: a device put and extracts information from a computer
 - integrated peripherals: USB controllers, onboard LAN, floppy disk access controller, onboard serial port
 - external peripherals: mouse, keyboard, microphone
 - to disable: run `lspci -k` to get a list of hardware and associated kernel modules. Then disable using computer's firmware (BIOS/EFI) or with `rmmod`. If `rmmod` fails due to dependencies, put the module into `/etc/modprobe.d/blacklist.conf` and reboot
 
-Configure systems with or without external peripherals such as keyboards.  
+##### Configure systems with or without external peripherals such as keyboards.  
 - PXE or BOOTP enable you to boot from network
 - if booting without keyboard, disable halting on errors in BIOS or EFI
 
-Differentiate between the various types of mass storage devices.  
+##### Differentiate between the various types of mass storage devices.  
 - `/dev/` shows available devices, typically designated by hd*, sd*, and fd*
 - a metadisk, aka RAID, can span multiple physical disks, and are designated by md*
 - loop devices: used to mount filesystems not associated with block-devices
@@ -27,7 +28,7 @@ Differentiate between the various types of mass storage devices.
 - `blkid`: locate/print block device attributes
 - `blkid /dev/sda3` shows UUID of a disk partition
 
-Set the correct hardware ID for different devices, especially the boot device.  
+##### Set the correct hardware ID for different devices, especially the boot device.  
 - each device has a major and a minor device number
 - `ls -l /dev/sda` shows major and minor device number before date
 - major device number identifies the driver Linux is using
@@ -37,11 +38,12 @@ Set the correct hardware ID for different devices, especially the boot device.
 - `ls -l /dev/dis/by-uuid` shows disks and their UUIDs
 - Normally you should not be required to change UUID, but if need be, use `tune2fs /dev/sda1 -U UUID`
 
-Know the differences between coldplug and hotplug devices.  
+##### Know the differences between coldplug and hotplug devices.  
 - cold plus devices require the system to be powered off. E.g.: RAM, AGP, PCI, PATA
 - hot plug devices can be plugged into a running system: USB, Firewire, some SATA and SCSI devices
 
-Determine hardware resources for devices.  
+
+##### Determine hardware resources for devices
 - IRQ: an interrupt request. A signal sent to the processor that temporarily stops a running program and allows an interrupt handler to run instead
 - IRQs are used by modems, NICs, keyboards, mice
 - /proc/interrupts shows cumulative number of interrupts per CPU per device during current boot session 
@@ -53,9 +55,30 @@ Determine hardware resources for devices.
 - /proc/partitions contains major and minor numbers of each partition as well as number of blocks and partition name
 - `blockdev --getbsz /dev/sda5` to show block size of a partition
 
-Tools and utilities to list various hardware information (e.g. lsusb, lspci, etc.)  
-Tools and utilities to manipulate USB devices  
-Conceptual understanding of sysfs, udev, hald, dbus  
+
+##### Tools and utilities to list various hardware information (e.g. lsusb, lspci, etc.)  
+- `lsmod` to show the status of modules in the Linux Kernel 
+- `lspci` to list all PCI devices
+- `lsusb` to list USB devices
+- `modprobe` to add and remove modules from the Linux Kernel
+
+
+##### Tools and utilities to manipulate USB devices  
+- `usbmgr` Daemon to load/unload USB modules
+- `hotplug` is another tool to manage USB devices, and is built-in in kernels version 2.4 and higher
+- hotplugged devices are detected automatically in newer kernels
+
+
+##### Conceptual understanding of sysfs, udev, hald, dbus  
+- sysfs is a virtual filesystem, mounted at /sys, that exports info about devices for use by user-space utilities
+- udev is a virtual filesystem mounted at /dev. Creates dynamic device files as drivers are loaded
+- D-Bus is a free and open-source inter-process communication (IPC) system, allowing multiple, concurrently-running computer programs (processes) to communicate with one another
+- hald (Hardware Abstraction Layer daemon) informs user-space programs about available hardware
+
+
+
+
+
 /sys  
 /proc  
 /dev  
