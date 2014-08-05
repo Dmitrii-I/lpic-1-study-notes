@@ -16,7 +16,7 @@ lpic-1-study-notes
 - if booting without keyboard, disable halting on errors in BIOS or EFI
 
 ##### Differentiate between the various types of mass storage devices.  
-- `/dev/` shows available devices, typically designated by hd*, sd*, and fd*
+- `/dev/` lists available devices, typically designated by hd*, sd*, and fd*
 - a metadisk, aka RAID, can span multiple physical disks, and are designated by md*
 - loop devices: used to mount filesystems not associated with block-devices
 - RAM disks are designated by /dev/ram0, /dev/ram1, etc.
@@ -73,22 +73,30 @@ lpic-1-study-notes
 - sysfs is a virtual filesystem, mounted at /sys, that exports info about devices for use by user-space utilities
 - udev is a virtual filesystem mounted at /dev. Creates dynamic device files as drivers are loaded
 - D-Bus is a free and open-source inter-process communication (IPC) system, allowing multiple, concurrently-running computer programs (processes) to communicate with one another
-- hald (Hardware Abstraction Layer daemon) informs user-space programs about available hardware
-
-
-
-
-
-/sys  
-/proc  
-/dev  
-modprobe  
-lsmod  
-lspci  
-lsusb  
+- HALD (Hardware Abstraction Layer daemon) informs user-space programs about available hardware
   
 #### 101.2 Boot the system  
-Provide common commands to the boot loader and options to the kernel at boot time.  
+
+##### Provide common commands to the boot loader and options to the kernel at boot time
+- bootloader is a program that runs before the operating system has loaded
+- `grub-install /dev/sda` will install the GRUB (GRand Unified Bootloader) legacy into the first sector (called MBR, Master Boot Record) of the first disk
+- you can also install GRUB legacy into the boot sector of a partition rather than into MBR
+- `efibootmgr` to install Fedora's EFI enabled version of GRUB legacy
+- GRUB 2: edit /etc/default/grub or the files in /etc/grub.d, then run `update-grub` or `grub-mkconfig > /boot/grub/grub.cfg`
+- GRUB legacy options in /boot/grub/grub.conf  
+        - `default = 1` tells to load OS under menu option #1 by default
+        - `timeout = 15` tells GRUB to wait 15 seconds to allow user to make OS selection at boot time
+        - `splashimage = splashimage (hd0,1)/grub/images/usplash.xpm.gz` us a splash image 
+        - `title Fedora 3.4.1` the title of the OS shown in selection meny during boot
+        - `root (hd0,0)` specifies the GRUB root disk and partition
+        - `kernel /vmlinuz-2.4.9-21 ro root=/dev/hda6` loads kernel located at <GRUB-root>/vmlinuz-2.4.9-21 where <GRUB-root> was specified with the option `root`. The parameter `ro` loads the root device hda6 as read only during the boot. The root device hda6 is where Linux will mount its root once booted
+        - `initrd /initrd-3.4.1` GRUB-root relative path to the initial RAM disk that contains minimal set of drivers to boot the OS
+        - `rootnoverify` configures the root partition for GRUB, just like the root command, but does not mount the partition. This is useful for when an OS is outside of the area of the disk that GRUB can read, but setting the correct root device is still desired. Typically used to boot Windows
+        - `chainloader +1` tells GRUB to load the bootloader one sector from the start of the root partition (which should have been specified with the root option). Often used to load Windows bootloader
+
+
+
+
 Demonstrate knowledge of the boot sequence from BIOS to boot completion.  
 Check boot events in the log files.  
 /var/log/messages  
