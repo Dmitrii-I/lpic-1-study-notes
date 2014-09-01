@@ -100,20 +100,20 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 
 ##### Demonstrate knowledge of the boot sequence from BIOS to boot completion
 - the boot sequence:
-        - power on
-        - firmware (BIOS) is loaded from EEPROM
-        - Bootloader is loaded from boot device (from Master Boot Record if boot device is a hard disk)
-        - Bootloader examines the partition table and locates the boot partition
-        - from boot partition bootloader loads the kernel or loads secondary bootloader from partition's boot sector 
-        - the OS is loaded
+        * power on  
+        * firmware (BIOS) is loaded from EEPROM  
+        * Bootloader is loaded from boot device (from Master Boot Record if boot device is a hard disk)  
+        * Bootloader examines the partition table and locates the boot partition  
+        * from boot partition bootloader loads the kernel or loads secondary bootloader from partition's boot sector  
+        * the OS is loaded  
 
 ##### Check boot events in the log files
 - run `dmesg` to examine kernel ring buffer
 - the kernel ring buffer contains messages from kernel produced during boot time
 - ring buffer messages are also passed to `syslogd` once it is running
-- `syslogd` logs the messages into /var/log/messages
-- on Ubuntu, `rsyslogd` logs the messages into /var/log/syslog
-- besides ring buffer messages, `syslogd` also contains messages from applications like mail, cron, auth
+- `syslogd` logs the messages into `/var/log/messages`
+- on Ubuntu, `rsyslogd` logs the messages into `/var/log/syslog`
+- besides ring buffer messages, `syslogd` also contains messages from applications like mail, cron, and auth
 
 
 # STOPPED HERE
