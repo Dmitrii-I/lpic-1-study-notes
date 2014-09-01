@@ -78,7 +78,11 @@ lpic-1-study-notes
 #### 101.2 Boot the system  
 
 ##### Provide common commands to the boot loader and options to the kernel at boot time
+- kernel is a set of routines, constantly in memory, that provide interface between user programs and hardware, schedule processes, manage virtual memory
 - bootloader is a program that runs before the operating system has loaded
+- `/sbin/init` is the first program, a daemon, launched by kernel and stopped once the system shuts down. It loads services and other programs, and mounts partitions listed in `/etc/fstab` 
+        - there are several `init` vendors: System V (or SysV), upstart, systemd
+        - The System V init daemon is configured through /etc/inittab
 - `grub-install /dev/sda` will install the GRUB (GRand Unified Bootloader) legacy into the first sector (called MBR, Master Boot Record) of the first disk
 - you can also install GRUB legacy into the boot sector of a partition rather than into MBR
 - `efibootmgr` to install Fedora's EFI enabled version of GRUB legacy
@@ -94,11 +98,26 @@ lpic-1-study-notes
         - `rootnoverify` configures the root partition for GRUB, just like the root command, but does not mount the partition. This is useful for when an OS is outside of the area of the disk that GRUB can read, but setting the correct root device is still desired. Typically used to boot Windows
         - `chainloader +1` tells GRUB to load the bootloader one sector from the start of the root partition (which should have been specified with the root option). Often used to load Windows bootloader
 
+##### Demonstrate knowledge of the boot sequence from BIOS to boot completion
+- the boot sequence:
+        - power on
+        - firmware (BIOS) is loaded from EEPROM
+        - Bootloader is loaded from boot device (from Master Boot Record if boot device is a hard disk)
+        - Bootloader examines the partition table and locates the boot partition
+        - from boot partition bootloader loads the kernel or loads secondary bootloader from partition's boot sector 
+        - the OS is loaded
+
+##### Check boot events in the log files
+- run `dmesg` to examine kernel ring buffer
+- the kernel ring buffer contains messages from kernel produced during boot time
+- ring buffer messages are also passed to `syslogd` once it is running
+- `syslogd` logs the messages into /var/log/messages
+- on Ubuntu, `rsyslogd` logs the messages into /var/log/syslog
+- besides ring buffer messages, `syslogd` also contains messages from applications like mail, cron, auth
 
 
+# STOPPED HERE
 
-Demonstrate knowledge of the boot sequence from BIOS to boot completion.  
-Check boot events in the log files.  
 /var/log/messages  
 dmesg  
 BIOS  
