@@ -1,5 +1,7 @@
 # Study notes for the LPIC-1 certificate  
-  
+
+This file lists the detailed objectives of the LPIC-1 certificate, comprised of exam 101 and exam 102. The detailed objectives can be found at https://www.lpi.org/linux-certifications/programs/lpic-1/exam-101/ and https://www.lpi.org/linux-certifications/programs/lpic-1/exam-102/
+
 ### 101.1 Determine and configure hardware settings  
 
 ##### Enable and disable integrated peripherals.  
@@ -75,9 +77,10 @@
 #### 101.2 Boot the system  
 
 ##### Provide common commands to the boot loader and options to the kernel at boot time
-- kernel is a set of routines, constantly in memory, that provide interface between user programs and hardware, schedule processes, manage virtual memory
-- bootloader is a program that runs before the operating system has loaded
+- the kernel is a set of routines, constantly in memory, that provide interface between user programs and hardware, schedule processes, manage virtual memory
+- the bootloader is a program that runs before the operating system has loaded
 - `/sbin/init` is the first program, a daemon, launched by kernel and stopped once the system shuts down. It loads services and other programs, and mounts partitions listed in `/etc/fstab` 
+        - the PID of `init` is 1 and PPID is 0
         - there are several `init` vendors: System V (or SysV), upstart, systemd
         - The System V init daemon is configured through /etc/inittab
 - `grub-install /dev/sda` will install the GRUB (GRand Unified Bootloader) legacy into the first sector (called MBR, Master Boot Record) of the first disk
@@ -85,15 +88,15 @@
 - `efibootmgr` to install Fedora's EFI enabled version of GRUB legacy
 - GRUB 2: edit /etc/default/grub or the files in /etc/grub.d, then run `update-grub` or `grub-mkconfig > /boot/grub/grub.cfg`
 - GRUB legacy options in /boot/grub/grub.conf  
-        - `default = 1` tells to load OS under menu option #1 by default
-        - `timeout = 15` tells GRUB to wait 15 seconds to allow user to make OS selection at boot time
+        - `default = 1` tells to load OS under menu option #1 by default 
+        - `timeout = 15` tells GRUB to wait 15 seconds to allow user to make OS selection at boot time 
         - `splashimage = splashimage (hd0,1)/grub/images/usplash.xpm.gz` us a splash image 
-        - `title Fedora 3.4.1` the title of the OS shown in selection meny during boot
-        - `root (hd0,0)` specifies the GRUB root disk and partition
-        - `kernel /vmlinuz-2.4.9-21 ro root=/dev/hda6` loads kernel located at <GRUB-root>/vmlinuz-2.4.9-21 where <GRUB-root> was specified with the option `root`. The parameter `ro` loads the root device hda6 as read only during the boot. The root device hda6 is where Linux will mount its root once booted
-        - `initrd /initrd-3.4.1` GRUB-root relative path to the initial RAM disk that contains minimal set of drivers to boot the OS
-        - `rootnoverify` configures the root partition for GRUB, just like the root command, but does not mount the partition. This is useful for when an OS is outside of the area of the disk that GRUB can read, but setting the correct root device is still desired. Typically used to boot Windows
-        - `chainloader +1` tells GRUB to load the bootloader one sector from the start of the root partition (which should have been specified with the root option). Often used to load Windows bootloader
+        - `title Fedora 3.4.1` the title of the OS shown in selection meny during boot 
+        - `root (hd0,0)` specifies the GRUB root disk and partition 
+        - `kernel /vmlinuz-2.4.9-21 ro root=/dev/hda6` loads kernel located at <GRUB-root>/vmlinuz-2.4.9-21 where <GRUB-root> was specified with the option `root`. The parameter `ro` loads the root device hda6 as read only during the boot. The root device hda6 is where Linux will mount its root once booted 
+        - `initrd /initrd-3.4.1` GRUB-root relative path to the initial RAM disk that contains minimal set of drivers to boot the OS 
+        - `rootnoverify` configures the root partition for GRUB, just like the root command, but does not mount the partition. This is useful for when an OS is outside of the area of the disk that GRUB can read, but setting the correct root device is still desired. Typically used to boot Windows 
+        - `chainloader +1` tells GRUB to load the bootloader one sector from the start of the root partition (which should have been specified with the root option). Often used to load Windows bootloader 
 
 ##### Demonstrate knowledge of the boot sequence from BIOS to boot completion
 - the boot sequence:
