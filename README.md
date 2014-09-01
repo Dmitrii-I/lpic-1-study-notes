@@ -99,13 +99,13 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
         - `chainloader +1` tells GRUB to load the bootloader one sector from the start of the root partition (which should have been specified with the root option). Often used to load Windows bootloader  
 
 ##### Demonstrate knowledge of the boot sequence from BIOS to boot completion
-- the boot sequence:
-        * power on  
-        * firmware (BIOS) is loaded from EEPROM  
-        * Bootloader is loaded from boot device (from Master Boot Record if boot device is a hard disk)  
-        * Bootloader examines the partition table and locates the boot partition  
-        * from boot partition bootloader loads the kernel or loads secondary bootloader from partition's boot sector  
-        * the OS is loaded  
+- the boot sequence:  
+        - power on  
+        - firmware (BIOS) is loaded from EEPROM  
+        - Bootloader is loaded from boot device (from Master Boot Record if boot device is a hard disk)  
+        - Bootloader examines the partition table and locates the boot partition  
+        - from boot partition bootloader loads the kernel or loads secondary bootloader from partition's boot sector  
+        - the OS is loaded  
 
 ##### Check boot events in the log files
 - run `dmesg` to examine kernel ring buffer
