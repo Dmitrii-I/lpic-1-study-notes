@@ -15,12 +15,13 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - if booting without keyboard, disable halting on errors in BIOS or EFI
 
 ##### Differentiate between the various types of mass storage devices.  
-- `/dev/` lists available devices, typically designated by hd*, sd*, and fd*
-- a metadisk, aka RAID, can span multiple physical disks, and are designated by md*
+- `/dev` directory lists devices as file system
+- Examples: `/dev/sda` designates first hard disk, `/dev/sda1` designates first partition on first hard disk
+- Hard disks listed in `/dev` do not necessarily start with *sd*: they can start with *hd*, *fd*, or even some other letter-combination
+- a metadisk, aka RAID, can span multiple physical disks; the names start with *md*
 - loop devices: used to mount filesystems not associated with block-devices
-- RAM disks are designated by /dev/ram0, /dev/ram1, etc.
-- /dev/initrd is the initial RAM disk loaded by the bootloader. Newer kernels user /dev/ram0
-- `file --special-files /dev/sda` shows partitions and their startheads and startsectors
+- `/dev/initrd` is the initial RAM disk loaded by the bootloader. Newer kernels list RAM disks as  `/dev/ram0`, `/dev/ram1`, ...
+- `file --special-files /dev/sda` shows partitions and startheads and startsectors of the partitions
 - `hdparm`: get/set SATA/IDE device parameters
 - `hdparm -i /dev/sda` shows disk identification info which the kernel drivers (IDE, libata) have stored from boot/configuration time
 - `hdparm -g /dev/sda` shows disk geometry
