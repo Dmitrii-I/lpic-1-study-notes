@@ -135,8 +135,10 @@ Knowledge of basic features of systemd and Upstart
 /etc/inittab  
 shutdown  
 init  
-/etc/init.d  
-telinit  
+##### /etc/init.d  
+A directory with System V scripts that are run at startup through symlinks in `/etc/rc\*.d` 
+
+##### telinit  
   
 ### 102.1 Design hard disk layout  
 Allocate filesystems and swap space to separate partitions or disks.  
