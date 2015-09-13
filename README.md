@@ -1,20 +1,14 @@
-# Study notes for the LPIC-1 certificate  
+# Exam 101
 
 This file lists the detailed objectives of the LPIC-1 certificate, comprised of exam 101 and exam 102. The detailed objectives can be found at https://www.lpi.org/linux-certifications/programs/lpic-1/exam-101/ and https://www.lpi.org/linux-certifications/programs/lpic-1/exam-102/
 
-### 101.1 Determine and configure hardware settings  
-
-##### Enable and disable integrated peripherals.  
+#### 101.1 Determine and configure hardware settings  
 - peripheral: a device put and extracts information from a computer
 - integrated peripherals: USB controllers, onboard LAN, floppy disk access controller, onboard serial port
 - external peripherals: mouse, keyboard, microphone
 - to disable: run `lspci -k` to get a list of hardware and associated kernel modules. Then disable using computer's firmware (BIOS/EFI) or with `rmmod`. If `rmmod` fails due to dependencies, put the module into `/etc/modprobe.d/blacklist.conf` and reboot
-
-##### Configure systems with or without external peripherals such as keyboards.  
 - PXE or BOOTP enable you to boot from network
 - if booting without keyboard, disable halting on errors in BIOS or EFI
-
-##### Differentiate between the various types of mass storage devices.  
 - `/dev` directory lists devices as file system
 - Examples: `/dev/sda` designates first hard disk, `/dev/sda1` designates first partition on first hard disk
 - Hard disks listed in `/dev` do not necessarily start with *sd*: they can start with *hd*, *fd*, or even some other letter-combination
@@ -27,8 +21,6 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - `hdparm -g /dev/sda` shows disk geometry
 - `blkid`: locate/print block device attributes
 - `blkid /dev/sda3` shows UUID of a disk partition
-
-##### Set the correct hardware ID for different devices, especially the boot device.  
 - each device has a major and a minor device number
 - `ls -l /dev/sda` shows major and minor device number before date
 - major device number identifies the driver Linux is using
@@ -37,13 +29,8 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - UUID: universally unique identifier, a 128 bit number
 - `ls -l /dev/dis/by-uuid` shows disks and their UUIDs
 - Normally you should not be required to change UUID, but if need be, use `tune2fs /dev/sda1 -U UUID`
-
-##### Know the differences between coldplug and hotplug devices.  
 - cold plug devices require the system to be powered off. E.g.: RAM, AGP, PCI, PATA
 - hot plug devices can be plugged into a running system: USB, Firewire, some SATA and SCSI devices
-
-
-##### Determine hardware resources for devices
 - IRQ: an interrupt request. A signal sent to the processor that temporarily stops a running program and allows an interrupt handler to run instead
 - IRQs are used by modems, NICs, keyboards, mice
 - /proc/interrupts shows cumulative number of interrupts per CPU per device during current boot session 
@@ -54,54 +41,29 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - /proc/modules shows modules loaded by the kernel
 - /proc/partitions contains major and minor numbers of each partition as well as number of blocks and partition name
 - `blockdev --getbsz /dev/sda5` to show block size of a partition
-
-
-##### Tools and utilities to list various hardware information (e.g. lsusb, lspci, etc.)  
 - `lsmod` to show the status of modules in the Linux Kernel 
 - `lspci` to list all PCI devices
 - `lsusb` to list USB devices
 - `modprobe` to add and remove modules from the Linux Kernel
-
-
-##### Tools and utilities to manipulate USB devices  
 - `usbmgr` Daemon to load/unload USB modules
 - `hotplug` is another tool to manage USB devices, and is built-in in kernels version 2.4 and higher
 - hotplugged devices are detected automatically in newer kernels
-
-
-##### Conceptual understanding of sysfs, udev, hald, dbus  
 - udev is a virtual filesystem mounted at /dev. Creates dynamic device files as drivers are loaded
 - D-Bus is a free and open-source inter-process communication (IPC) system, allowing multiple, concurrently-running computer programs (processes) to communicate with one another
 - HALD (Hardware Abstraction Layer daemon) informs user-space programs about available hardware
-
-##### /sys
 - the sysfs virtual filesystem, mounted at `/sys`. Exports info about devices for use by user-space utilities
-
-##### /dev
 - contains files representing device access points
 - devices include, terminal devices (tty), floppy (fd), hard disks (hd, sd), RAM (ram), cdrom (cd)
-
-##### lsmod
-
-##### lsusb
-
-##### /proc
 - contains info about system resources
-
-##### modprobe
-
-##### lspci
 - lists PCI buses and devices connected to them
   
 #### 101.2 Boot the system  
-
-##### Provide common commands to the boot loader and options to the kernel at boot time
-- the kernel is a set of routines, constantly in memory, that provide interface between user programs and hardware, schedule processes, manage virtual memory
-- the bootloader is a program that runs before the operating system has loaded
-- `/sbin/init` is the first program, a daemon, launched by kernel and stopped once the system shuts down. It loads services and other programs, and mounts partitions listed in `/etc/fstab` 
-        - the PID of `init` is 1 and PPID is 0  
-        - there are several `init` vendors: System V (or SysV), upstart, systemd  
-        - The System V init daemon is configured through /etc/inittab  
+- kernel is a set of routines, constantly in memory. Provides interface between user programs and hardware, schedules processes, manages virtual memory
+- bootloader: a program that runs before OS has loaded
+- `/sbin/init`: first program, a daemon, launched by kernel and stopped once the system shuts down. Loads services and other programs, and mounts partitions listed in `/etc/fstab` 
+- the PID of `init` is 1 and PPID is 0  
+- there are several `init` vendors: System V (or SysV), upstart, systemd  
+- The System V init daemon is configured through /etc/inittab  
 - `grub-install /dev/sda` will install the GRUB (GRand Unified Bootloader) legacy into the first sector (called MBR, Master Boot Record) of the first disk  
 - you can also install GRUB legacy into the boot sector of a partition rather than into MBR
 - `efibootmgr` to install Fedora's EFI enabled version of GRUB legacy
@@ -395,4 +357,96 @@ whereis
 which  
 type  
 /etc/updatedb.conf  
-  
+
+
+# Exam 102 
+
+#### 105.1 Customize and use the shell environment (Weight: 4)
+- Set environment variables (e.g. PATH) at login or when spawning a new shell
+- Write Bash functions for frequently used sequences of commands
+- Maintain skeleton directories for new user accounts
+- Set command search path with the proper directory
+- `.`
+- `source`
+- `/etc/bash.bashrc`
+- `/etc/profile`
+- `env`
+- `export`
+- `set`
+- `unset`
+- `~/.bash_profile`
+- `~/.bash_login`
+- `~/.profile`
+- `~/.bashrc`
+- `~/.bash_logout`
+- `function`
+- `alias`
+- `lists`
+
+#### 105.2 Customize or write simple scripts (Weight: 4)
+- Use standard sh syntax (loops, tests)
+- Use command substitution
+- Test return values for success or failure or other information provided by a command
+- Perform conditional mailing to the superuser
+- Correctly select the script interpreter through the shebang (#!) line
+- Manage the location, ownership, execution and suid-rights of scripts
+- for
+- while
+- test
+- if
+- read
+- seq
+- exec
+
+#### 106.1 Install and configure X11 (Weight: 2)
+- Verify that the video card and monitor are supported by an X server
+- Awareness of the X font server
+- Basic understanding and knowledge of the X Window configuration file
+- /etc/X11/xorg.conf
+- xhost
+- DISPLAY
+- xwininfo
+- xdpyinfo
+- X
+
+#### 106.2 Setup a display manager (Weight: 1)
+- Basic configuration of LightDM
+- Turn the display manager on or off
+- Change the display manager greeting
+- Awareness of XDM, KDM and GDM
+- lightdm
+- /etc/lightdm/
+
+#### 106.3 Accessibility (Weight: 1)
+- Basic knowledge of keyboard accessibility settings (AccessX)
+- Basic knowledge of visual settings and themes
+- Basic knowledge of assistive technology (ATs)
+- Sticky/Repeat Keys
+- Slow/Bounce/Toggle Keys
+- Mouse Keys
+- High Contrast/Large Print Desktop Themes
+- Screen Reader
+- Braille Display
+- Screen Magnifier
+- On-Screen Keyboard
+- Gestures (used at login, for example GDM)
+- Orca
+- GOK
+- emacspeak
+
+#### 108.4 Manage printers and printing (Weight: 2)
+- Basic CUPS configuration (for local and remote printers)
+- Manage user print queues
+- Troubleshoot general printing problems
+- Add and remove jobs from configured printer queues
+- CUPS configuration files, tools and utilities
+- /etc/cups/
+- lpd legacy interface (lpr, lprm, lpq)
+
+
+
+
+
+
+
+ 
