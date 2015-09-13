@@ -39,7 +39,7 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - Normally you should not be required to change UUID, but if need be, use `tune2fs /dev/sda1 -U UUID`
 
 ##### Know the differences between coldplug and hotplug devices.  
-- cold plus devices require the system to be powered off. E.g.: RAM, AGP, PCI, PATA
+- cold plug devices require the system to be powered off. E.g.: RAM, AGP, PCI, PATA
 - hot plug devices can be plugged into a running system: USB, Firewire, some SATA and SCSI devices
 
 
@@ -154,10 +154,12 @@ Knowledge of basic features of systemd and Upstart
 /etc/inittab  
 shutdown  
 init  
-/etc/init.d  
-telinit  
+##### /etc/init.d  
+A directory with System V scripts that are run at startup through symlinks in `/etc/rc\*.d` 
+
+##### telinit  
   
-#### 102.1 Design hard disk layout  
+### 102.1 Design hard disk layout  
 Allocate filesystems and swap space to separate partitions or disks.  
 Tailor the design to the intended use of the system.  
 Ensure the /boot partition conforms to the hardware architecture requirements for booting.  
@@ -169,7 +171,7 @@ swap space
 mount points  
 partitions  
   
-#### 102.2 Install a boot manager  
+### 102.2 Install a boot manager  
 Providing alternative boot locations and backup boot options.  
 Install and configure a boot loader such as GRUB Legacy.  
 Perform basic configuration changes for GRUB 2.  
@@ -179,7 +181,7 @@ grub-install
 MBR  
 superblock  
   
-#### 102.3 Manage shared libraries  
+### 102.3 Manage shared libraries  
 Identify shared libraries.  
 Identify the typical locations of system libraries.  
 Load shared libraries.  
@@ -188,8 +190,8 @@ ldconfig
 /etc/ld.so.conf  
 LD_LIBRARY_PATH  
   
-#### 102.4 Use Debian package management  
-Install, upgrade and uninstall Debian binary packages.  
+### 102.4 Use Debian package management  
+##### Install, upgrade and uninstall Debian binary packages.  
 Find packages containing specific files or libraries which may or may not be installed.  
 Obtain package information like version, content, dependencies, package integrity and installation status (whether or not the package is installed).  
 /etc/apt/sources.list  
