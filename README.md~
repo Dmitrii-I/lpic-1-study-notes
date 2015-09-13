@@ -15,13 +15,12 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 - if booting without keyboard, disable halting on errors in BIOS or EFI
 
 ##### Differentiate between the various types of mass storage devices.  
-- `/dev` directory lists devices as file system
-- Examples: `/dev/sda` designates first hard disk, `/dev/sda1` designates first partition on first hard disk
-- Hard disks listed in `/dev` do not necessarily start with *sd*: they can start with *hd*, *fd*, or even some other letter-combination
-- a metadisk, aka RAID, can span multiple physical disks; the names start with *md*
+- `/dev/` lists available devices, typically designated by hd\*, sd\*, and fd\*
+- a metadisk, aka RAID, can span multiple physical disks, and are designated by md\*
 - loop devices: used to mount filesystems not associated with block-devices
-- `/dev/initrd` is the initial RAM disk loaded by the bootloader. Newer kernels list RAM disks as  `/dev/ram0`, `/dev/ram1`, ...
-- `file --special-files /dev/sda` shows partitions and startheads and startsectors of the partitions
+- RAM disks are designated by /dev/ram0, /dev/ram1, etc.
+- /dev/initrd is the initial RAM disk loaded by the bootloader. Newer kernels user /dev/ram0
+- `file --special-files /dev/sda` shows partitions and their startheads and startsectors
 - `hdparm`: get/set SATA/IDE device parameters
 - `hdparm -i /dev/sda` shows disk identification info which the kernel drivers (IDE, libata) have stored from boot/configuration time
 - `hdparm -g /dev/sda` shows disk geometry
@@ -70,28 +69,10 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 
 
 ##### Conceptual understanding of sysfs, udev, hald, dbus  
+- sysfs is a virtual filesystem, mounted at /sys, that exports info about devices for use by user-space utilities
 - udev is a virtual filesystem mounted at /dev. Creates dynamic device files as drivers are loaded
 - D-Bus is a free and open-source inter-process communication (IPC) system, allowing multiple, concurrently-running computer programs (processes) to communicate with one another
 - HALD (Hardware Abstraction Layer daemon) informs user-space programs about available hardware
-
-##### /sys
-- the sysfs virtual filesystem, mounted at `/sys`. Exports info about devices for use by user-space utilities
-
-##### /dev
-- contains files representing device access points
-- devices include, terminal devices (tty), floppy (fd), hard disks (hd, sd), RAM (ram), cdrom (cd)
-
-##### lsmod
-
-##### lsusb
-
-##### /proc
-- contains info about system resources
-
-##### modprobe
-
-##### lspci
-- lists PCI buses and devices connected to them
   
 #### 101.2 Boot the system  
 
