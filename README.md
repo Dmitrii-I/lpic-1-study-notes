@@ -91,6 +91,36 @@ This file lists the detailed objectives of the LPIC-1 certificate, comprised of 
 ### Alert users before switching runlevels / boot targets or other major system events
 ### Properly terminate processes
 ### /etc/inittab
+- read by sysV-compatible `init` daemon
+- tells init when to start some process
+- defines default runlevel
+- defines what each configured runlevel does
+- each line has pattern: id:runlevels:action:process
+- Sample file:
+```
+# Level to run in
+id:2:initdefault:
+
+# System initialization before anything else.
+si::sysinit:/etc/rc.d/bcheckrc
+
+# Runlevel 0,6 is halt and reboot, 1 is maintenance mode.
+l0:0:wait:/etc/rc.d/rc.halt
+l1:1:wait:/etc/rc.d/rc.single
+l2:2345:wait:/etc/rc.d/rc.multi
+l6:6:wait:/etc/rc.d/rc.reboot
+
+# What to do at the "3 finger salute".
+ca::ctrlaltdel:/sbin/shutdown -t5 -rf now
+
+# Runlevel 2&3: getty on console, level 3 also getty on modem port.
+1:23:respawn:/sbin/getty tty1 VC linux
+2:23:respawn:/sbin/getty tty2 VC linux
+3:23:respawn:/sbin/getty tty3 VC linux
+4:23:respawn:/sbin/getty tty4 VC linux
+S2:3:respawn:/sbin/uugetty ttyS2 M19200
+```
+
 ### shutdown
 ### init
 ### /etc/init.d/
@@ -411,14 +441,136 @@ A directory with System V scripts that are run at startup through symlinks in `/
 
 ## 106.1 Install and configure X11 (weight: 2)
 ### Verify that the video card and monitor are supported by an X server
+- run `X -version`
+- Consult docs of X for supported chipsets (drivers are written for chipsets, not video cards)
+- If supported, running `XFree86 -configure` or `Xorg -configure` should result in file `/root/XF86Config.new` or `/root/xorg.conf.new`
+- Check for video card drivers in `/usr/X11R6/lib/modules/drivers` or `/usr/lib/xorg/modules/drivers`
+    - e.g. `nv_drv.o` corresponds to an NVidia driver
 ### Awareness of the X font server
+- font server is convenient when many computers on a network need to have same fonts
+- not that common anymore
+- Font server must be in X config:
+```
+Section "Files"
+    FontPath    "unix:/7100"                            <- local font server
+    FontPath    "tcp/fontserver.mydomain.com:7100"      <- remote font server
+EndSection
+```
+- to add fonts to a font server:
+    - install the font on the system
+    - modify `/etc/X11/fs/config` and add the new font path to the `catalogue` variable
+    - restart font sever: `/etc/init.d/xfs restart`
+    - run `xset fp rehash` to refresh the fonts on the client
+
 ### Basic understanding and knowledge of the X Window configuration file
+- X.org-X11 config file: `/etc/X11/xorg.conf`
+- XFree86 4.x: `/etc/X11/XF86Config` or `/etc/X11/XF86Config-4`
+    - earlier versions not covered by the exam
+- config file is broken down in sections
+    - `InputDevice` section for mice and keyboards
+    - `Module` section for loading of drivers for specific features or hardware
+    - `Monitor` section is for monitor; `Modeline` entry is tricky and dangerous!
+    - `Device` section is for video card. `Driver` entry sets the driver
+    - `Screen` section tells X how to combine video card and monitor
+    - `ServerLayout` section tells X how to link all the components
+- Example X config file:
+```
+Section "InputDevice"
+    Identifier  "Keyboard0"
+    Driver      "kbd"
+    Option      "XkbModel"  "pc105"
+    Option      "XkbLayout" "us"
+    Option      "AutoRepeat"    "500 200"
+EndSection
+
+Section "InputDevice"
+    Identifier  "Mouse0"
+    Driver      "mouse"
+    Option      "Protocol"  "IMPS/2"
+    Option      "Device" "/dev/input/mice"
+    Option      "Emulate3Buttons"   "no"
+    Option      "ZAxisMapping"  "4 5"
+EndSection
+
+Section "Module"
+    Load    "dbe"
+    Load    "extmod"
+    Load    "fbdevhw"
+    Load    "glx"
+    Load    "record"
+    Load    "freetype"
+    Load    "type1"
+    Load    "dri"
+EndSection
+
+Section "Monitor"
+    Identifier" "Monitor0"
+    ModelName   "Dell 30UXWB"
+    HorizSync   30.0 - 83.0
+    VertRefresh 55.0 - 75.0
+    Modeline "1920x1080" 138.50 1920 1968 2000 2080     1080 1083 1088 1111 
+EndSection
+
+Section "Device"
+    Identifier  "Videocard0"
+    Driver      "nv"
+    VendorName  "nVidia"
+    BoardName   "GeForce 1080X"
+    VideoRam    "260000"
+EndSection
+
+Section "Screen"
+    Identifier  "Screen0"
+    Device      "Videocard0"
+    Monitor     "Monitor0"
+    DefaultDepth    24
+    SubSection "Display"
+        Depth   24
+        Modes   "1920x1080" "1280x1024" "1024x768"
+    EndSubSection
+    SubSection "Display"
+        Depth   8
+        Modes   "1024x768" "800x600" "640x480"
+    EndSubSection
+EndSection
+
+Section "ServerLayout"
+    Identifier  "single monitor setup"
+    Screen      "Screen0" 0 0
+    InputDevice "Mouse0" "CorePointer"
+    InputDevice "Keyboard0" "CoreKeyboard"
+EndSection
+```
+
 ### /etc/X11/xorg.conf
+- config file of X.org-X11
+
 ### xhost
+- command to allow X to be accessed remotely
+- `xhost +somehost` will allow somehost to use current host's X server
+- `xhost -somehost` will disallow somehost to use current host's X server
+
 ### DISPLAY
+- this environment vaiable sets host that has X server running (and a connected monitor)
+- running on somemachine the command `export DISPLAY=myhomemachine:0.0` will display
+ graphical programs on myhomemachine that are running on somemachine
+
 ### xwininfo
+- use this tool to obtain technical info about specific window
+
 ### xdpyinfo
+- this tool tells you what your display is capable of
+
 ### X
+- GUI system for Linux
+- aka X Window System
+- implementations: 
+    - XFree86: not populat anymore
+    - X.org-X11: based on XFree86 and is most popular one
+    - Accelerated-X: commercial one, with some expanded support for exotic hardware
+- Create initial config with `Xorg -configure`
+- Remote X sessions possible, preferably through SSH tunnel for encryption as X does not have it
+
 
 ## 106.2 Setup a display manager (weight: 1)
 ### Basic configuration of LightDM
@@ -675,69 +827,4 @@ A directory with System V scripts that are run at startup through symlinks in `/
 ### ssh_known_hosts
 ### gpg
 ### ~/.gnupg/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
