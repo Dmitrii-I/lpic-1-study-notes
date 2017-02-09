@@ -551,9 +551,10 @@ EndSection
 - `xhost -somehost` will disallow somehost to use current host's X server
 
 ### DISPLAY
-- this environment vaiable sets host that has X server running (and a connected monitor)
+- This environment variable indicates to graphical applications where to display the actual graphical user interface
+- The value consists of 3 parts: A host-name followed by a colon (:), a display number followed by a dot (.) and a screen number.
 - running on somemachine the command `export DISPLAY=myhomemachine:0.0` will display
- graphical programs on myhomemachine that are running on somemachine
+ graphical applications on myhomemachine that are running on somemachine
 
 ### xwininfo
 - use this tool to obtain technical info about specific window
@@ -573,6 +574,7 @@ EndSection
 
 
 ## 106.2 Setup a display manager (weight: 1)
+
 ### Basic configuration of LightDM
 - config file: `/etc/lightdm/lightdm.conf`
 - `allow-guest=false` to disable guest logins
@@ -580,74 +582,99 @@ EndSection
 - `greeter-show-manual-login=true` to allow manual login
 - `autologin-user=username` with which username to autologin
 - `autologin-user-timeout=delay` after how many seconds of inactivity after starting to autologin
-- `greeter-session=name` to change the greeter
 - `sudo start lightdm` and `sudo stop lightdm`
 - `sudo dpkg-reconfigure lightdm`
+
 ### Turn the display manager on or off
 - Turn on and off by changing runlevels: `telinit 5`
+- `systemctl disable gdm` in Debian 8
 - Turn LightDM on/off: `sudo start lightdm` and `sudo stop lightdm`
+
 ### Change the display manager greeting
 - in the config file look for option containing word `greeter`
+
 ### Awareness of XDM, KDM and GDM
 - All of them are XDMCP (X Display Manager Control Protocol) servers, aka display managers
 - KDM is from KDE project
 - GDM is from GNOME project
 - XDM is oldest at least feature-heavy display manager
+
 ### lightdm
 - a daemon
 - cross-desktop display manager
 - runs display servers (e.g. X)
 - runs greeters
 - provides remote graphical login options
+
 ### /etc/lightdm/
 - directory containing config for LightDM
 
 ## 106.3 Accessibility (weight: 1)
+
 ### Basic knowledge of keyboard accessibility settings (AccessX)
 - AccessX seems outdated and not maintained
     - display managers typically have AccessX covered
 - various options like sticky keys, repeat keys, onscreen keyboard
+
 ### Basic knowledge of visual settings and themes
 - onscreen keyboard
 - default fonts
 - maginifier tools
 - high/low contrast themes
+
 ### Basic knowledge of assistive technology (ATs)
-- you can make Linux speak
+- Linux can "speak", e.g. by reading you the text in terminal
 - you can hookup Linux to a braille display
-- you can adjust various visual settings
+- you can adjust various visual settings, e.g. high/low contrast themes
+
 ### Sticky/Repeat Keys
 - sticky keys: keep Ctrl, Shift, Alt keys pressed when pressed and released
-- keyboard repeat rate: set the delay and repeat rate tailored to a user  
+- keyboard repeat rate: set the delay and repeat rate tailored to a user
+
 ### Slow/Bounce/Toggle Keys
 - bounce keys: multiple presses count as one
 - slow keys: register key strokes only after long enough press and hold
+
 ### Mouse Keys
 - mouse keys: use cursor pad as mouse keys
-- simulate mouse clicks when a mouse pointer stops
-- mouse gestures: move specific mouse movements to some actions (e.g. close a window)
+
 ### High Contrast/Large Print Desktop Themes
 - usually located in system settings of a display manager
+
 ### Screen Reader
 - program that reads the text on the screen
+
 ### Braille Display
 - Translate text on screen into braille and show it in a braille display (a tacit display)
+
 ### Screen Magnifier
 - make screen bigger around mouse cursor
+
 ### On-Screen Keyboard
 - show a keyboard on the screen and use mouse to click on its keys
+
 ### Gestures (used at login, for example GDM)
+- a mouse gesture allows you to make a clicks or start some application using mouse movents only
+- e.g. dwell gesture clicks on an icon if you point mouse cursor on it long enough
+- mouse gestures: move specific mouse movements to some actions (e.g. close a window)
+
 ### Orca
 - Screenreader program
+
 ### GOK
 - GNOME onscreen keyboard
+
 ### emacspeak
 - Screenreader program
 
 ## 107.1 Manage user and group accounts and related system files (weight: 5)
+
 ### Add, modify and remove users and groups
+
 ### Manage user/group info in password/group databases
+
 ### Create and manage special purpose and limited accounts
+
 ### /etc/passwd
 ### /etc/shadow
 ### /etc/group
