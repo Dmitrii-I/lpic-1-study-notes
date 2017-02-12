@@ -474,6 +474,7 @@ EndSection
     - `Screen` section tells X how to combine video card and monitor
     - `ServerLayout` section tells X how to link all the components
 - Example X config file:
+
 ```
 Section "InputDevice"
     Identifier  "Keyboard0"
@@ -709,23 +710,55 @@ EndSection
 
 ## 107.3 Localisation and internationalisation (weight: 3)
 ### Configure locale settings and environment variables
+- query current locale with `locale`
+- query available locales with `locale -a`
+- `LC_ALL` variable overrides all other `LC_*` variables
+- change locale temporarily: `export LC_ALL=en_GB.UTF-8`
+- change locale permanently by setting `LC_*` variables in `.bashrc` or `/etc/profile`
+- `LANG=C` output is not passed through locale translations
+    - helpful for debugging
+    - avoids some problems when binary data is passed through pipelines
 ### Configure timezone settings and environment variables
+- file or symlink `/etc/localtime` tells Linux the timezone
+- `/usr/share/zonefiles` contains timezone files that you can symlink from `/etc/localtime`
 ### /etc/timezone
+- a file with timezone data in textual format
+    - used by Debian and derivatives
+    - Fedora uses `/etc/sysconfig/clock`
 ### /etc/localtime
+- file or symlink to a file containing current timezone info
 ### /usr/share/zoneinfo/
+- directory with timezone files
 ### LC\_\*
+- various environment variables that control the locale settings, like paper size, currency, etc.
 ### LC\_ALL
+- a locale environment variable to override all other environment variables
 ### LANG
+- a locale environment variable
 ### TZ
+- environment variable that hold timezone info (3 possible formats)
+- can be useful in the event of connecting to server in different timezone
+    - set it with `export TZ=:/usr/share/zoneinfo/Europe/London`
 ### /usr/bin/locale
+- program to query and set locale
 ### tzselect
+- a program that helps make timezone changes
 ### timedatectl
+- program (part of systemd) to set system clock
 ### date
+- shows current date in various formats
 ### iconv
+- program to convert file from one encoding to another
 ### UTF-8
+- a language codeset
+- 8-bit Unicode Transformation Format
 ### ISO-8859
+- an early attempt to extend ASCII to handle language other than English
 ### ASCII
+- old and primitive method of encoding language into 7 bits 
+- dsigned to handle English character set only
 ### Unicode
+- character set designed to support as many languages as possible
 
 ## 108.1 Maintain system time (weight: 3)
 ### Set the system date and time
