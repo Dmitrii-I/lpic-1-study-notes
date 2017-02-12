@@ -830,12 +830,51 @@ EndSection
 
 ## 108.4 Manage printers and printing (weight: 2)
 ### Basic CUPS configuration (for local and remote printers)
+- Applications submit print jobs as PostScript documents
+- In case of non-PostScript printers, Ghostscript program converts PostScript into appropriate format 
+- CUPS, Common Unix Printing System, manages print queues
+- Access CUPs daemon in browser by going to `http://localhost:631`
+- print queues are usually subdirectories of `/var/spool/cups`
+- CUPS daemon runs in the background watching for jobs to be submitted
+- sample `/etc/cups/cupsd.conf` file:
+```
+<Location /printers>
+Order Deny,Allow                    # allow directives modify deny directives
+Deny from All                       # Refuse all connections
+BrowseAllow from 127.0.0.1          # accept browsing requests from 127.0.0.1
+BrowseAllow from 192.168.1.0/24
+BrowseAllow from @LOCAL             # accept browsing requests from systems connected to local subnets
+Allow from 127.0.0.1                # allow 127.0.0.1 to print
+Allow from 192.168.1.0/24
+Allow from @LOCAL
+</Location>
+```
+
 ### Manage user print queues
+- `lpq -U bob` shows Bob's print queue
+- `lprm -U bob 123` to cancel Bob's job with ID 123
+
 ### Troubleshoot general printing problems
+- `cupsenable` to enable a print queue
+- `cupsdisable` to disable a print queue
+- `lpmove` to move a print job from one queue to another
+
+
 ### Add and remove jobs from configured printer queues
+- `lprm` removes print jobs
+- `lpc` to start, stop, and reorder jobs within queues
+
 ### CUPS configuration files, tools and utilities
+- `/etc/cups/printers.conf` contains printer definitions
+- `/etc/cups/cupsd.conf` contains config for the CUPS daemon
+
 ### /etc/cups/
+- CUPS config dir
+
 ### lpd legacy interface (lpr, lprm, lpq)
+- users submit print jobs using `lpr` program or programs that wrap it
+- `lpq` displays print queue (e.g. `lpq -Php400`)
+- `lprm` removes print jobs
 
 ## 109.1 Fundamentals of internet protocols (weight 4)
 ### Demonstrate an understanding of network masks and CIDR notation
