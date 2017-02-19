@@ -671,24 +671,101 @@ EndSection
 ## 107.1 Manage user and group accounts and related system files (weight: 5)
 
 ### Add, modify and remove users and groups
+- keep usernames 8 characters or less
+- use only alphanumeric characters for usernames
+- to run programs or created files with non-primary group use `newgrp`
+    - e.g. `newgrp project2`
+- add users using `useradd`
+- change password using `passwd` utility
+- modify accounts using `usermod` utility
+- delete accounts using `userdel` utility
+- add groups using `groupadd` utility
+- modify groups using `groupmod` utility
+- delete group using `groupdel` utility
 
 ### Manage user/group info in password/group databases
+- password database is in `/etc/passwd`
+- group database is in `/etc/group`
+- primary group of a user is in `/etc/passwd`
+- each username is mapped to a UID (User ID) in `/etc/passwd`
+    - it is possible to have multiple usernames map to same UID
+- each group is mapped to a GID (Group ID) in `/etc/group`
+- Linux distributions reserve first 100 UIDs and GIDs for system use
+    - root has UID 0
+    - exact limits (`UID_MIN`, `UID_MAX`) are in `/etc/login.defs`
 
 ### Create and manage special purpose and limited accounts
+- system accounts are created using `useradd -r systemacc1`
+- create account without login by settings its shell to `/bin/false`
 
 ### /etc/passwd
+- file that contains configuration of the accounts
+- sample line (colon delimited): `john:x:543:200:John Smith:/home/john:/bin/bash`
+    - this line means the username is `john` with UID `543` and primary GID `200`, with user comment being `John Smith` and home dir being `/home/john` and shell being `/bin/bash`
+    - `x` indicates that shadow password is in use (`/etc/shadow`)
+    - `543` is the UID
+    - `200` is the primary GID
+
 ### /etc/shadow
+- this file, present in a system that uses shadow passwords, contains encrypted passwords
+- typical line (colon delimited): `john:FDFSG#$Tge34ge5:3344:0:-1:7:-1:-1`
+    - most of the fields correspond to option set with `chage` utility
+    - second field is the encrypted password
+        - asterisk or exclamation mark indicate locked account
+    - `3344` indicates days since last password change
+
 ### /etc/group
+- controls group membership of users
+- typical, colon delimited line: `project1:x:501:john,peter,alice`
+    - indicates that group with name project1 has a shadow password (`/etc/gshadow`), has GID 501, and has memebers John, Peter, and Alice
+
 ### /etc/skel/
+- directory containing files that will be copied to user's home directory upon user creation
+
 ### chage
+- utility to modify settings related to account expiration
+
 ### getent
+- displays entries from databases supported by the Name Service Switch libraries, which are configured in `/etc/nsswitch.conf`
+
 ### groupadd
+- utility to add groups
+- `groupadd [-g GID [-o]] [-r] [-f] groupname`
+    - `-r` creates system group
+
 ### groupdel
+- utility to delete groups
+- by default, group files (`find / -gid 501`) are not deleted
+
 ### groupmod
+- utility to modify groups
+- `groupmod [-g GID [-o]] [-n newgroupname] currentgroupname`
+
 ### passwd
+- utility to change password
+- root user can change password for all users
+- normal users can change only their own password
+- the `-l` option locks the account by prefixing the encrypted password with exclamation mark
+- the `-u` option unlocks an account
+- the `-d` option removes password and makes account passwordless
+
 ### useradd
+- `useradd [-d homedir] [-e expire-date] [-g default-group] [-G group[,...]] [-p pass] [-s shell] [-u UID [-o]] [-r] [-m [-k skeleton-dir]] username`
+- set the shell to `/bin/false` or `/sbin/shutdown` to disallow shell use
+- the `-o` option allows using existing UID
+- the `-r` opion creates a system account (UID lower than `UID_MIN` as defined in `/etc/login.defs`) without homedir
+- the `-m` option creates home directory based on `/etc/skel` which can be overridden with `-k` option
+
 ### userdel
+- utility to delete user accounts
+- `userdel -r john` to delete John's account and his files
+
 ### usermod
+- utility to modify user accounts
+- `-d` option changes home directory
+- `-l` option changes username
+- `-L` and `-U` lock and unlock the account
+
 
 ## 107.2 Automate system administration tasks by scheduling jobs (weight: 4)
 ### Manage cron and at jobs
