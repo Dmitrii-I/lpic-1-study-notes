@@ -768,22 +768,106 @@ EndSection
 
 
 ## 107.2 Automate system administration tasks by scheduling jobs (weight: 4)
+
 ### Manage cron and at jobs
+- `cron` is a daemon that runs jobs
+    - "wakes up" once a minute and runs commands 
+    - a command is run only if its specified time matches current time
+    - the commands are in `/var/spool/cron` file, `/etc/cron.d` directories, and `/etc/crontab` file
+    - there are two types of cron jobs: system cron jobs and user cron jobs
+- user cron jobs are managed with `crontab` utility
+- system cron jobs are managed by editing `/etc/crontab` directly
+- to run `at` jobs, `atd` daemon must be running
+
 ### Configure user access to cron and at services
+- access to cron is managed through `/etc/cron.allow` and `/etc/cron.deny` files
+    - if `/etc/cron.allow` is not present then everyone is allowed to run cron jobs
+- access to `at` jobs is done through files `/etc/at.allow` and `/etc/at.deny`
+    - if neither of these files exist, then only `root` is allowed to run `at`
+
 ### Configure anacron
+- configured through file `/etc/anacrontab`
+- example `/etc/anacrontab` file:
+```
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr:bin
+# format: period delay job-identifier command
+1   5   cron.daily  run-parts /etc/cron.daily
+7   10  cron.weekly run-parts /etc/cron.weekly
+```
+- intervals are in days
+
 ### /etc/cron.{d,daily,hourly,monthly,weekly}/
+- these directories contain programs to be run by `cron` daemon as system cron jobs
+- the {daily,hourly,monthly,weekly} directories suggest the frequency with which the programs should be run
+
 ### /etc/at.deny
+- this file contains users that should be denied the use of `at` utility
+
 ### /etc/at.allow
+- this file contains users that should be allowed the use of `at` utility
+
 ### /etc/crontab
+- controls system jobs
+- example:
+```
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user  command
+17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly
+25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+```
+- first five fields are minute, hour, day-of-month, month, day-of-week
+    - multiple values can be specified as
+        - asterisk which matches all possible values
+        - list separated by commas (e.g. 1,10,59)
+        - two values separated by a dash, representing a range, e.g. 9-17
+        - a slash with some other multi-value option specifies stepped values, e.g. `*/5` in minute field to run a job every 5 minutes
+- sixth field is the user that will be used to run the specified command
+- seventh field is the command
+- typically, `run-parts` or `cronloop` are used to run any executable script within a directory
+
 ### /etc/cron.allow
+- file specifying who is allowed to have cron jobs
+
 ### /etc/cron.deny
+- file specifying who is not allowed to have cron jobs
+
 ### /var/spool/cron/
+- contains crontab files of users
+
 ### crontab
+- utility to manage user cron jobs
+- syntax: `crontab [-u user] [-l | -e | -r] [file]`
+- edit user cron jobs with `crontab -e` 
+- format of user crontab is same as `/etc/crontab`, except no user name is needed
+
 ### at
+- utility that allows running some command once at some point in future
+- syntax: 
+    - `at [-V] [-q queue] [-f file] [-mMlv] timespec...`
+    - `at [-V] [-q queue] [-f file] [-mMkv] [-t time]`
+
 ### atq
+- query pending `at` jobs
+
 ### atrm
+- remove pending `at` job
+
 ### anacron
+- utility to run jobs after some interval of days passes
+- useful for workstations that often are switched on and off
+- not so useful on servers
+- `anacron` must be called itself
+    - via startup script
+    - via cronjob
+
 ### /etc/anacrontab
+- configuration file on `anacron`
+
 
 ## 107.3 Localisation and internationalisation (weight: 3)
 ### Configure locale settings and environment variables
