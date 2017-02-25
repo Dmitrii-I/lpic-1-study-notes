@@ -1015,21 +1015,136 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 
 ## 108.2 System logging (weight: 3)
+
 ### Configuration of the syslog daemon
+- the daemon is configured through `syslog.conf` file
+
 ### Understanding of standard facilities, priorities and actions
+- non-comment lines in `syslog.conf` have this pattern: `facility.priority action`
+- facility is the type of program or tool that generated the message to be logged
+    - valid values are: auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, security, syslog, users, uucp, local[0-7]
+        - most services not covered use daemon as facility
+- priority indicates the importance of the log message
+    - valid values, in escalating order of priority are: debug, info, notice, warning, warn, error, err, crit, alert, emerg, panic
+    - `syslogd` will log messages only if the priority of the messages is equal to, or higher than the configured priority
+- action is often a file name in the `/var/log/` directory
+- facility and priority together are often referred to as selector
+- examples
+    - `mail.*   /var/log/mail` will log messages of all priorities from mail facility to `/var/log/mail` file
+    - `*.emerg  *` will send all emerg-level messages to the consoles of all users who are logged into the computer using text-mode tools
+    - `kern.crit    @logger.myhost.com` will send all critical kernel messages to logger.myhost.com
+    - `kern.crit    /dev/console` will send critical kernel messages to the console
+
 ### Configuration of logrotate
+
 ### Awareness of rsyslog and syslog-ng
+- `syslog-ng` is an alternative system logger, that supports more advanced filtering that `syslogd`
+- recent version of Ubuntu and Fedora use `rsyslogd`
+
 ### syslog.conf
+- configuration file of `syslogd`
+- non-comment lines have this pattern: `facility.priority action`
+- note that a log message can match multiple filters and hence `syslogd` will process it multiple times
+
 ### syslogd
+- a daemon that writes incoming messages, possibly from other hosts, and writes them to the system log
+
 ### klogd
+- a daemon, from same package `sysklogd` as the `syslogd` daemon
+- manages logging of the kernel messages
+
 ### /var/log/
+- directory containing log files
+
 ### logger
+- utility to manually send log messages to the system logger for processing
+- syntax: `logger [-isd] [-f file] [-p pri] [-t tag] [-u socket] [message ...]`
+    - `-i` records process ID
+    - `-s` sends to standard error (and the file if specified)
+    - `-d` uses datagrams instead of streams 
+    - `-u` allows logging to a network socket
+
 ### logrotate
+- utility to perform log file rotation
+
 ### /etc/logrotate.conf
+- configuration file of the `logrotate` utility
+- example:
+```
+# Rotate logs weekly
+weekly
+# Keep 4 weeks of old logs
+rotate 4
+# Create new log files after rotation
+create
+# Compress old log file
+compress
+# Refer to files for individual packages
+include /etc/logrotate.d
+# Set miscellaneous options
+notifempty
+nomail
+noolddir
+# Rotate `wmtp`, which is not handled by a specific program
+/var/log/wmtp {
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+```
+
 ### /etc/logrotate.d/
+- directory belonging to the `logrotate` utility
+- contains files that configure `logrotate` to handle specific log files
+
 ### journalctl
+- utility on systems that are using `systemd` to query the systemd journal
+
 ### /etc/systemd/journald.conf
+- configuration file of `journald`
+- example: 
+```
+#  This file is part of systemd.##  systemd is free software; you can redistribute 
+#  it and/or modify it under the terms of the GNU Lesser General Public License as 
+#  published by the Free Software Foundation; either version 2.1 of the License, or
+#  (at your option) any later version.
+#
+# Entries in this file show the compile time defaults.
+# You can change settings by editing this file.
+# Defaults can be restored by simply deleting this file.
+#
+# See journald.conf(5) for details.
+ [Journal]
+#Storage=auto
+#Compress=yes
+#Seal=yes
+#SplitMode=uid
+#SyncIntervalSec=5m
+#RateLimitInterval=30s
+#RateLimitBurst=1000
+#SystemMaxUse=
+#SystemKeepFree=
+#SystemMaxFileSize=
+#RuntimeMaxUse=
+#RuntimeKeepFree=
+#RuntimeMaxFileSize=
+#MaxRetentionSec=
+#MaxFileSec=1month
+#ForwardToSyslog=yes
+#ForwardToKMsg=no
+#ForwardToConsole=no
+#ForwardToWall=yes
+#TTYPath=/dev/console
+#MaxLevelStore=debug
+#MaxLevelSyslog=debug
+#MaxLevelKMsg=notice
+#MaxLevelConsole=info
+#MaxLevelWall=emerg
+```
+
 ### /var/log/journal/
+- default directory where `jounrald` stores journals, aka logs
+
 
 ## 108.3 Mail Transfer Agent (MTA) basics (weight: 3)
 ### Create e-mail aliases
