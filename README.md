@@ -939,21 +939,80 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 - character set designed to support as many languages as possible
 
 ## 108.1 Maintain system time (weight: 3)
+
 ### Set the system date and time
+- x86 and x86-64 systems running Linux have two clocks: hardware clock and software clock
+- hardware clock maintains time while the system is swtiched off
+- when system is booted, Linux uses hardware clock to set the software clock
+- Linux uses software clock for most purposes
+- Linux always sets its clock to UTC
+- both hardware and software clocks are unreliable
+- user `date` utility to query and set system date and time
+
 ### Set the hardware clock to the correct time in UTC
+- use `hwclock` utility
+
 ### Configure the correct timezone
+- use `/etc/localtime` file to set the timezone
+- use `TZ` variable
+
 ### Basic NTP configuration
+
 ### Knowledge of using the pool.ntp.org service
+- this is a pool of NTP servers
+- NTP servers are provided by volunteers
+- you do not know to which exact server you connect
+- you can narrow down the pool with `0.pool.ntp.org` or `europe.pool.ntp.org`
+
 ### Awareness of the ntpq command
+- interactive program to query the NTP daemon
+- `ntpq -p` to show status of NTP servers that have been queried by the daemon
+- asterisk indicates that this server is synced to
+- plus indicates server with good times
+- minus and x indicate that the server is not considered
+
 ### /usr/share/zoneinfo/
+- this directory contains zone files
+- one of files in this directory may be symlinked from `/etc/localtime`
+
 ### /etc/timezone
+- this file contains the timezone of the software clock
+
 ### /etc/localtime
+- this file contains the timezone of the software clock
+- often it is a symlink to a zone file in `/usr/share/zoneinfo`
+
 ### /etc/ntp.conf
+- configuration file of the NTP daemon
+- most important set the NTP servers
+    - NTP daemon queries each server to determine which one to use
+
 ### date
+- `date` utility queries and sets the software clock
+- syntax: `date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]`
+
 ### hwclock
+- utility to query and set hardware clock
+- `-r` option to query
+- `--set --date=newdate` option to set the date
+- `--systohc` to set hardware clock based on software clock
+- `--hctosys` to set software clock based on hardware clock
+- `--utc` or `--localtime` to treat hardware clock as UTC or localtime
+
 ### ntpd
+- NTP daemon
+- syncs software clock to one of the NTP servers that are set in `/etc/ntp.conf`
+- works by measuring roundtrip times between server and the client
+
 ### ntpdate
+- this utility is part of the NTP suite
+- sets the time on the client based on some NTP server
+- syntax: `ntpdate clock.example.com`
+
 ### pool.ntp.org
+- subdomain of public NTP servers from volunteers
+- servers are accessed in round-robin fashion so you may end up with different server upon `ntpd` restart
+
 
 ## 108.2 System logging (weight: 3)
 ### Configuration of the syslog daemon
