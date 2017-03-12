@@ -1212,16 +1212,91 @@ Allow from @LOCAL
 - `lprm` removes print jobs
 
 ## 109.1 Fundamentals of internet protocols (weight 4)
+
 ### Demonstrate an understanding of network masks and CIDR notation
+- Network mask (aka subnet mask or netmast) is a number that identifies the portion of IP address that's a network address and the part that's computer address
+    - e.g. for IP address 134.5.66.123 and network mask 255.255.0.0, the network is 134.5 and computer is 66.123
+    - network mask can also be written in short form (CIDR form): 134.5.66.123 with mask 255.255.255.0 is same as 134.5.6.123/24
+- CIDR (Classless Inter-Domain Routing) is a notation for representing a range of IP addresses
+    - before CIDR there was classful addressing which derived the net mask from the IP address
+    - CIDR represents network bit mask with a number after the slash
+    - CIDR allows the mask to be any value from /0 to /32
+    - e.g. the range 133.4.5.0 - 133.4.5.1 is represented as 133.4.5.0/31
+    - e.g. XX.XX.XX.0 thru XX.XX.XX.9 is represented as XX.XX.XX.0/29 and XX.XX.XX.8/31 (because CIDR can express ranges only in base 2)
+- Traditionally IPv4 network addresses were broken down into classes
+    - each class has a private range, with routers normally dropping packets to private ranges
+    - Class A (net mask of /8), with range 1.0.0.0 - 127.255.255.255, private range 10.0.0.0 - 10.255.255.255
+    - Class B (net mask of /16), with range 128.0.0.0 - 191.255.255.255, private range 172.16.0.0 - 172.31.255.255
+    - Class C (net mask of /24), with range 192.0.0.0 - 223.255.255.255, private range 192.168.0.0 - 192.168.255.255
+    - Class D, with range 224.0.0.0 - 239.255.255.255, reserved for multicasting (sending data to multiple computers simulateneously)
+    - Class E, with range 240.0.0.0 - 255.255.255.255, reserved for future use
+    - Nowadays, no one does classful addressing anymore, however people do continue to use the names "Class A", "Class B", "Class C" network to indicate the network mask of size 24, 16, and 8.
+
 ### Knowledge of the differences between private and public “dotted quad” IP addresses
+- dotted quad notation shows all 4 bytes of IPv4 address or network mask as decimal numbers separated by a dot (e.g. 144.22.3.6 or 255.255.0.0)
+
 ### Knowledge about common TCP and UDP ports and services (20, 21, 22, 23, 25, 53, 80, 110, 123, 139, 143, 161, 162, 389, 443, 465, 514, 636, 993, 995)
+
 ### Knowledge about the differences and major features of UDP, TCP and ICMP
+- TCP
+    - creates full connections
+    - does error checking and correction
+    - features lead to small performance penalty
+    - layer 4 (application layer) protocols built on top of TCP: SMTP, HTTP, FTP
+- UDP
+    - simple and fast
+    - does not guarantee in-order delivery
+    - does not guarantee delivery
+    - application layer protocols built on top of UDP: DNS, NFS, media streaming protocols
+- ICMP
+    - most often used to send errors between computers
+    - technically, an internet layer protocol
+    - relies upon IP
+
 ### Knowledge of the major differences between IPv4 and IPv6
+- Converting between MAC address and IP address 
+    - For IPv4, TCP/IP stack uses ARP (Address Resolution protocol
+    - For IPv6, TCP-IP stack uses (NDP) Neighbor Discovery Protcol
+- Expressing addresses
+    - IPv4: four base-10 numbers separated by a dot (e.g. 134.43.1.23)
+    - IPv6: eight groups of four hexadecimal numbers seprated by colon (e.g. fed1:0db8:85a3:08d3:1319:8a2e:0370:7334)
+
 ### Knowledge of the basic features of IPv6
+- IPv6 addresses can be built in part from computer's MAC address
+
 ### /etc/services
+
 ### IPv4, IPv6
+
 ### Subnetting
+
 ### TCP, UDP, ICMP
+- TCP: Transimission Control Protocol, a layer 3 (transport layer) protocol
+- UDP: User Datagram Protocol, a layer 3 (transport layer) protocol
+- ICMP: Internet Control Message Protocol, a simple protocol for communicating data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 109.2 Basic network configuration (weight 4)
 ### Manually and automatically configure network interfaces
@@ -1326,3 +1401,6 @@ Allow from @LOCAL
 ### gpg
 ### ~/.gnupg/
 
+# References
+
+[1] http://networkengineering.stackexchange.com/questions/19840/does-cidr-really-do-away-with-ip-address-classes
