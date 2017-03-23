@@ -1237,6 +1237,27 @@ Allow from @LOCAL
 
 ### Knowledge about common TCP and UDP ports and services (20, 21, 22, 23, 25, 53, 80, 110, 123, 139, 143, 161, 162, 389, 443, 465, 514, 636, 993, 995)
 
+- 20: ftp data port from which server sends data to client, in active mode
+- 21: ftp server command port, where initial client request arrives
+- 22: ssh, scp, sftp, port forwarding
+- 23: telnet
+- 25: smtp
+- 53: DNS
+- 80: HTTP
+- 110: POP3
+- 123: NTP
+- 139: NetBIOS Session Service
+- 143: IMAP
+- 161: SNMP
+- 162: SNMP Trap
+- 389: LDAP
+- 443: HTTPS
+- 465: Authenticated SMTP over TLS/SSL (SMTPS)
+- 514: Remote shell, `rsh`, `remsh`
+- 636: LDAPS (LDAP over TLS/SSL)
+- 993: IMAPS (IMAP over TLS/SSL)
+- 995: POP3S (POP3 over TLS/SSL)
+
 ### Knowledge about the differences and major features of UDP, TCP and ICMP
 - TCP
     - creates full connections
@@ -1265,10 +1286,21 @@ Allow from @LOCAL
 - IPv6 addresses can be built in part from computer's MAC address
 
 ### /etc/services
+- config file that maps port numbers to named services
+- meant for programs to do `getportbyname('pop3')` type queries
 
 ### IPv4, IPv6
 
 ### Subnetting
+- process of designating some high-order bits from the host part and grouping them with the network mask to form the subnet mask
+- done to have subnetworks inside main network
+- all hosts on a subnetwork have same network prefix
+- a /24 network can have following number of subnets for each subnet mask:
+    - /24: 1 subnet
+    - /25: 2 subnets
+    - /26: 4 subnets
+    - ...
+    - in general: 2 to the power of number of subnet bits - number of network bits
 
 ### TCP, UDP, ICMP
 - TCP: Transimission Control Protocol, a layer 3 (transport layer) protocol
@@ -1276,35 +1308,44 @@ Allow from @LOCAL
 - ICMP: Internet Control Message Protocol, a simple protocol for communicating data
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 109.2 Basic network configuration (weight 4)
 ### Manually and automatically configure network interfaces
 ### Basic TCP/IP host configuration
 ### Setting a default route
+
 ### /etc/hostname
+- file that contains hostname of the machine (e.g. box1, mailserver) 
+
 ### /etc/hosts
+- file containing mapping of IP addresses to hostnames
+- format: ip hostname [aliases...]
+- used before a hostname is looked up with DNS
+    - used during system boot when no DNS is available
+
 ### /etc/nsswitch.conf
+- Name Service Switch config file
+- Used by GNU C library to determine the sources from which to obtain name-service information in a range of categories and in what order.
+- The first column specifies the database
+- Example file:
+```
+passwd:         compat
+group:          compat
+shadow:         compat
+
+hosts:          dns [!UNAVAIL=return] files
+networks:       nis [NOTFOUND=return] files
+ethers:         nis [NOTFOUND=return] files
+protocols:      nis [NOTFOUND=return] files
+rpc:            nis [NOTFOUND=return] files
+services:       nis [NOTFOUND=return] files
+```
+
+
+
+
+
+
+
 ### ifconfig
 ### ifup
 ### ifdown
