@@ -1234,6 +1234,12 @@ Allow from @LOCAL
 
 ### Knowledge of the differences between private and public “dotted quad” IP addresses
 - dotted quad notation shows all 4 bytes of IPv4 address or network mask as decimal numbers separated by a dot (e.g. 144.22.3.6 or 255.255.0.0)
+- public ip address is accessible from Internet
+- private address is accessible only from withing network
+- reserved ranges of ip's for private use:
+    - 10.0.0.0 - 10.255.255.255:  16,777,216 hosts (class A)
+    - 172.16.0.0 - 172.31.255.255: 1,048,576 hosts (class B)
+    - 192.168.0.0 - 192.168.255.255: 65,536 hosts (class C)
 
 ### Knowledge about common TCP and UDP ports and services (20, 21, 22, 23, 25, 53, 80, 110, 123, 139, 143, 161, 162, 389, 443, 465, 514, 636, 993, 995)
 
@@ -1284,12 +1290,28 @@ Allow from @LOCAL
 
 ### Knowledge of the basic features of IPv6
 - IPv6 addresses can be built in part from computer's MAC address
+- Larger address space (16 bytes per address = 2^128)
+- No need for NATs
+- auto-configuration: no need for DHCP
+- IPSec
+- No broadcast, but does have multicast
+- Anycast
+- simpler headers -> faster parsing and routing
 
 ### /etc/services
 - config file that maps port numbers to named services
 - meant for programs to do `getportbyname('pop3')` type queries
 
 ### IPv4, IPv6
+- IPv4
+    - Internet Protocol version 4
+    - deployed in 1983 at ARPANET
+    - connectionless, best-effort, delivery not guaranteed
+    - for packet-switched networks
+    - a 32-bit address is assigned to each connected device
+- IPv6
+    - Internet Protocol version 6
+    - replaces IPv4
 
 ### Subnetting
 - process of designating some high-order bits from the host part and grouping them with the network mask to form the subnet mask
@@ -1340,18 +1362,23 @@ rpc:            nis [NOTFOUND=return] files
 services:       nis [NOTFOUND=return] files
 ```
 
-
-
-
-
-
-
 ### ifconfig
+- utility to configure a network interface
+
 ### ifup
+- utility to bring a network interface up
+
 ### ifdown
+- utility to bring a network interface down
+
 ### ip
+- utility to show / manipulate routing, devices, policy routing and tunnels
+
 ### route
+- utility to manipulate IP routing table
+
 ### ping
+- utility to send ICMP ECHO_REQUEST to network hosts 
 
 
 ## 109.3 Basic network troubleshooting
@@ -1359,29 +1386,79 @@ services:       nis [NOTFOUND=return] files
 ### Change, view, or configure the routing table and correct an improperly set default route manually
 ### Debug problems associated with the network configuration
 ### ifconfig
+- utility to configure a network interface
 ### ip
+- utility to show / manipulate routing, devices, policy routing and tunnels
 ### ifup
+- utility to bring a network interface up
 ### ifdown
+- utility to bring a network interface down
 ### route
+- utility to manipulate IP routing table
 ### host
+- DNS lookup utility
 ### hostname
+- utility to manipulate system's host name
 ### dig
+- DNS lookup utility
 ### netstat
+- utility to print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
 ### ping
+- utility to send ICMP ECHO_REQUEST to network hosts 
 ### ping6
+- utility to send ICMP ECHO_REQUEST to network hosts addressed with IPv6
 ### traceroute
+- utlity to trace path to a network host
 ### traceroute6
+- utlity to trace path to a network host, with support for IPv6 addresses
 ### tracepath
+- utility to trace path to a network hosts, discovering MTU along the way
 ### tracepath6
+- utility to trace path to a network hosts, discovering MTU along the way, with support for IPv6 addresses
 ### netcat
+- aka `nc`
+- support IPv6
+- utility is used for just about anything under the sun involving TCP, UDP, or UNIX-domain sockets.  
+    - open TCP connections
+    - send UDP packets
+    - listen on arbitrary TCP and UDP ports
+    - do port scanning
+    - simple TCP proxies
+    - shell-script based HTTP clients and servers
+    - network daemon testing
+    - a SOCKS or HTTP ProxyCommand for ssh(1)
 
 ## 109.4 Configure client side DNS (weight: 2)
 ### Query remote DNS servers
 ### Configure local name resolution and use remote DNS servers
 ### Modify the order in which name resolution is done
+
 ### /etc/hosts
+- file containing mapping of IP addresses to hostnames
+- format: ip hostname [aliases...]
+- used before a hostname is looked up with DNS
+    - used during system boot when no DNS is available
+
 ### /etc/resolv.conf
+
 ### /etc/nsswitch.conf
+- Name Service Switch config file
+- Used by GNU C library to determine the sources from which to obtain name-service information in a range of categories and in what order.
+- The first column specifies the database
+- Example file:
+```
+passwd:         compat
+group:          compat
+shadow:         compat
+
+hosts:          dns [!UNAVAIL=return] files
+networks:       nis [NOTFOUND=return] files
+ethers:         nis [NOTFOUND=return] files
+protocols:      nis [NOTFOUND=return] files
+rpc:            nis [NOTFOUND=return] files
+services:       nis [NOTFOUND=return] files
+```
+
 ### host
 ### dig
 ### getent
