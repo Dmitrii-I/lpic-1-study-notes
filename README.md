@@ -1331,8 +1331,12 @@ Allow from @LOCAL
 
 
 ## 109.2 Basic network configuration (weight 4)
+
 ### Manually and automatically configure network interfaces
+- manual configuration is done with `ifconfig`, `ifup`, and `ifdown` utilities
+
 ### Basic TCP/IP host configuration
+
 ### Setting a default route
 
 ### /etc/hostname
@@ -1364,6 +1368,14 @@ services:       nis [NOTFOUND=return] files
 
 ### ifconfig
 - utility to configure a network interface
+- `sudo ifconfig eth0 192.168.42.42` to assign an ip address to eth0 interface
+- `ifconfig eth0 netmask 255.255.0.0` to assign a netmask to eth0 interface 
+    - for ip addresses outside the network you will need to specify a gateway
+- `ifconfig -a` shows all interfaces including disabled ones
+- `ifconfig eth0 down` to disable the eth0 interface
+- `ifconfig eth0 up` to enable the eth0 interface
+- `ifconfig eth0 broadcast 192.168.2.255` to change broadcast address of the eth0 interface
+- `ifconfig eth0 mtu 1500` to set MTU to 1500 bytes, largest Ethernet supported size at the network layer
 
 ### ifup
 - utility to bring a network interface up
@@ -1383,38 +1395,57 @@ services:       nis [NOTFOUND=return] files
 
 ## 109.3 Basic network troubleshooting
 ### Manually and automatically configure network interfaces and routing tables to include adding, starting, stopping, restarting, deleting or reconfiguring network interfaces
+
 ### Change, view, or configure the routing table and correct an improperly set default route manually
+
 ### Debug problems associated with the network configuration
+
+
 ### ifconfig
 - utility to configure a network interface
+
 ### ip
 - utility to show / manipulate routing, devices, policy routing and tunnels
+
 ### ifup
 - utility to bring a network interface up
+
 ### ifdown
 - utility to bring a network interface down
+
 ### route
 - utility to manipulate IP routing table
+
 ### host
 - DNS lookup utility
+
 ### hostname
 - utility to manipulate system's host name
+
 ### dig
 - DNS lookup utility
+
 ### netstat
 - utility to print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
+
 ### ping
 - utility to send ICMP ECHO_REQUEST to network hosts 
+
 ### ping6
 - utility to send ICMP ECHO_REQUEST to network hosts addressed with IPv6
+
 ### traceroute
 - utlity to trace path to a network host
+
 ### traceroute6
 - utlity to trace path to a network host, with support for IPv6 addresses
+
 ### tracepath
 - utility to trace path to a network hosts, discovering MTU along the way
+
 ### tracepath6
 - utility to trace path to a network hosts, discovering MTU along the way, with support for IPv6 addresses
+
 ### netcat
 - aka `nc`
 - support IPv6
@@ -1429,17 +1460,34 @@ services:       nis [NOTFOUND=return] files
     - a SOCKS or HTTP ProxyCommand for ssh(1)
 
 ## 109.4 Configure client side DNS (weight: 2)
+
 ### Query remote DNS servers
+- use `dig` utility to query a remote DNS server
+    - e.g. `dig somewebsite.com @some.dns.server.com` outputs ` droptips.com.       86400   IN      A       89.238.134.5`
+        - 86400 is the TTL which is for how long the DNS will cache
+    - e.g. `dig MX google.co.uk @ns1.google.com` to query for MX records
+ 
 ### Configure local name resolution and use remote DNS servers
+- local names resolution can be done using `/etc/hosts` file
+    - e.g. `127.0.0.1 mypc localhost blah`
+- to use remove DNS servers, use `/etc/resolv.conf` file
+    - add line `nameserver 8.8.8.8` to use DNS server with IP address 8.8.8.8
+
 ### Modify the order in which name resolution is done
+- use config file `/etc/nsswitch.conf`
+- query DNS servers, then files: `hosts:          dns [!UNAVAIL=return] files`
+- query files, then DNS servers: `hosts:          files dns [!UNAVAIL=return]`
 
 ### /etc/hosts
 - file containing mapping of IP addresses to hostnames
 - format: ip hostname [aliases...]
 - used before a hostname is looked up with DNS
     - used during system boot when no DNS is available
+- could be used to redirect host names of ad server to localhost to avoid loading ads
 
 ### /etc/resolv.conf
+- config file containing the DNS server used by the computer
+- may be overwritten when network is managed by a network manager or configured via DHCP
 
 ### /etc/nsswitch.conf
 - Name Service Switch config file
@@ -1458,10 +1506,17 @@ protocols:      nis [NOTFOUND=return] files
 rpc:            nis [NOTFOUND=return] files
 services:       nis [NOTFOUND=return] files
 ```
+- `hosts:          dns [!UNAVAIL=return] files`
+    - to resolve host name consult dns first, then files like `/etc/hosts`
 
 ### host
+- utility for performing simple DNS lookups
+
 ### dig
+- dig = domain information groper, a flexible tool for interrogating DNS name servers
+
 ### getent
+- utility to get entries from Name Service Switch libraries
 
 ## 110.1 Perform security administration tasks (weight: 3)
 ### Audit a system to find files with the suid/sgid bit set
@@ -1522,3 +1577,4 @@ services:       nis [NOTFOUND=return] files
 # References
 
 [1] http://networkengineering.stackexchange.com/questions/19840/does-cidr-really-do-away-with-ip-address-classes
+[2] https://www.gitbook.com/book/jadi/lpic1/details
