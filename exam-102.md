@@ -1,5 +1,27 @@
 # Exam 102 
 
+* [105.1 Customize and use the shell environment (weight: 4)](#1051-customize-and-use-the-shell-environment-weight-4)
+* [105.2 Customize or write simple scripts (weight: 4)](#1052-customize-or-write-simple-scripts-weight-4)
+* [105.3 SQL data management(weight 2)](#1053-sql-data-managementweight-2)
+* [106.1 Install and configure X11 (weight: 2)](#1061-install-and-configure-x11-weight-2)
+* [106.2 Setup a display manager (weight: 1)](#1062-setup-a-display-manager-weight-1)
+* [106.3 Accessibility (weight: 1)](#1063-accessibility-weight-1)
+* [107.1 Manage user and group accounts and related system files (weight: 5)](#1071-manage-user-and-group-accounts-and-related-system-files-weight-5)
+* [107.2 Automate system administration tasks by scheduling jobs (weight: 4)](#1072-automate-system-administration-tasks-by-scheduling-jobs-weight-4)
+* [107.3 Localisation and internationalisation (weight: 3)](#1073-localisation-and-internationalisation-weight-3)
+* [108.1 Maintain system time (weight: 3)](#1081-maintain-system-time-weight-3)
+* [108.2 System logging (weight: 3)](#1082-system-logging-weight-3)
+* [108.3 Mail Transfer Agent (MTA) basics (weight: 3)](#1083-mail-transfer-agent-mta-basics-weight-3)
+* [108.4 Manage printers and printing (weight: 2)](#1084-manage-printers-and-printing-weight-2)
+* [109.1 Fundamentals of internet protocols (weight 4)](#1091-fundamentals-of-internet-protocols-weight-4)
+* [109.2 Basic network configuration (weight 4)](#1092-basic-network-configuration-weight-4)
+* [109.3 Basic network troubleshooting](#1093-basic-network-troubleshooting)
+* [109.4 Configure client side DNS (weight: 2)](#1094-configure-client-side-dns-weight-2)
+* [110.1 Perform security administration tasks (weight: 3)](#1101-perform-security-administration-tasks-weight-3)
+* [110.2 Setup host security (weight: 3)](#1102-setup-host-security-weight-3)
+* [110.3 Securing data with encryption](#1103-securing-data-with-encryption)
+
+
 ## 105.1 Customize and use the shell environment (weight: 4)
 ### Set environment variables (e.g. PATH) at login or when spawning a new shell
 ### Write Bash functions for frequently used sequences of commands
