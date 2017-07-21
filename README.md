@@ -1,5 +1,7 @@
 # Exam 101
 
+* [test](#1013-change-runlevels--boot-targets-and-shutdown-or-reboot-system-weight-3)
+
 This file lists the detailed objectives of the LPIC-1 certificate, comprised of exam 101 and exam 102. The detailed objectives can be found at https://www.lpi.org/linux-certifications/programs/lpic-1/exam-101/ and https://www.lpi.org/linux-certifications/programs/lpic-1/exam-102/
 
 ## 101.1 Determine and configure hardware settings (weight: 2) 
