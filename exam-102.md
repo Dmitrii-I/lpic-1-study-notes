@@ -967,10 +967,35 @@ Allow from @LOCAL
 
 ### Manually and automatically configure network interfaces
 - manual configuration is done with `ifconfig`, `ifup`, and `ifdown` utilities
+- note: Ubuntu on desktops and laptops uses `network-manager` daemon and GUI to configure the network
+    - `network-manager` will only handle interface not in `/etc/network/interfaces`
 
 ### Basic TCP/IP host configuration
+- Configuration through DHCP (Dynamic Host Configuration Protocol)
+    - DHCP client starts at bootup and fetches config from DHCP server
+    - DHCP client must renew the DHCP lease periodically
+    - Fedora and Red Hat: in `/etc/sysconfig/network-scripts/ifcfg-<network iface name>` line `BOOTPROTO="dhcp"` enables DHCP
+    - Ubuntu: in `/etc/network/interfaces` the `dhcp` parameter in line `iface eth0 inet dhcp` enables DHCP
+    - Run DHCP client manually for network interface `eth0` with command: `sudo dhclient eth0`
+    - Look for string `DHCP` in the system log to see what DHCP client did
+    - Ubuntu: DHCP leases are in `/var/lib/dhcp/dhclient.leases`
+- Manual configuration
+    - Config files: `/etc/sysconfig/network-scripts/ifcfg-<iface-name>` or `/etc/network/interfaces`
+    - sample `/etc/sysconfig/network-scripts/ifcfg-<iface-name>`
+```
+DEVICE="p2p1"
+BOOTPROTO="static"
+IPADDR="192.168.29.39"  # ip address of this system. can also be set with via ifconfig utility
+NETMASK="255.255.255.0"
+NETWORK="192.168.29.0"
+BROADCAST="192.168.29.255"
+GATEWAY="192.168.29.1"
+ONBOOT="yes"
+```
 
 ### Setting a default route
+- use `route` utility
+- Add a default route: `route add default gw 192.168.29.1`
 
 ### /etc/hostname
 - file that contains hostname of the machine (e.g. box1, mailserver) 
@@ -1001,7 +1026,7 @@ services:       nis [NOTFOUND=return] files
 
 ### ifconfig
 - utility to configure a network interface
-- `sudo ifconfig eth0 192.168.42.42` to assign an ip address to eth0 interface
+- `ifconfig eth0 192.168.42.42` to assign an ip address to eth0 interface
 - `ifconfig eth0 netmask 255.255.0.0` to assign a netmask to eth0 interface 
     - for ip addresses outside the network you will need to specify a gateway
 - `ifconfig -a` shows all interfaces including disabled ones
@@ -1012,15 +1037,19 @@ services:       nis [NOTFOUND=return] files
 
 ### ifup
 - utility to bring a network interface up
+- bring interface `eth0` up: `ifup eth0`
 
 ### ifdown
 - utility to bring a network interface down
+- bring interface `eth0` down: `ifdown eth0`
 
 ### ip
 - utility to show / manipulate routing, devices, policy routing and tunnels
 
 ### route
 - utility to manipulate IP routing table
+- Add a default route: `route add default gw 192.168.29.1`
+
 
 ### ping
 - utility to send ICMP ECHO_REQUEST to network hosts 
