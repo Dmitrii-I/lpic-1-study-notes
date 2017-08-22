@@ -669,9 +669,33 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
     - `kern.crit    /dev/console` will send critical kernel messages to the console
 
 ### Configuration of logrotate
+- configured through `/etc/logrotate.conf` config file
+- example:
+```
+# Rotate logs weekly
+weekly
+# Keep 4 weeks of old logs
+rotate 4
+# Create new log files after rotation
+create
+# Compress old log file
+compress
+# Refer to files for individual packages
+include /etc/logrotate.d
+# Set miscellaneous options
+notifempty
+nomail
+noolddir
+# Rotate `wmtp`, which is not handled by a specific program
+/var/log/wmtp {
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+```
 
 ### Awareness of rsyslog and syslog-ng
-- `syslog-ng` is an alternative system logger, that supports more advanced filtering that `syslogd`
+- `syslog-ng` is an alternative system logger, that supports more advanced filtering than `syslogd`
 - recent version of Ubuntu and Fedora use `rsyslogd`
 
 ### syslog.conf
@@ -702,29 +726,6 @@ PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
 ### /etc/logrotate.conf
 - configuration file of the `logrotate` utility
-- example:
-```
-# Rotate logs weekly
-weekly
-# Keep 4 weeks of old logs
-rotate 4
-# Create new log files after rotation
-create
-# Compress old log file
-compress
-# Refer to files for individual packages
-include /etc/logrotate.d
-# Set miscellaneous options
-notifempty
-nomail
-noolddir
-# Rotate `wmtp`, which is not handled by a specific program
-/var/log/wmtp {
-    monthly
-    create 0664 root utmp
-    rotate 1
-}
-```
 
 ### /etc/logrotate.d/
 - directory belonging to the `logrotate` utility
@@ -968,20 +969,20 @@ Allow from @LOCAL
 ### Manually and automatically configure network interfaces
 - manual configuration is done with `ifconfig`, `ifup`, and `ifdown` utilities
 - note: Ubuntu on desktops and laptops uses `network-manager` daemon and GUI to configure the network
-    - `network-manager` will only handle interface not in `/etc/network/interfaces`
+    - `network-manager` will only handle interfaces not listed in `/etc/network/interfaces`
 
 ### Basic TCP/IP host configuration
 - Configuration through DHCP (Dynamic Host Configuration Protocol)
     - DHCP client starts at bootup and fetches config from DHCP server
     - DHCP client must renew the DHCP lease periodically
-    - Fedora and Red Hat: in `/etc/sysconfig/network-scripts/ifcfg-<network iface name>` line `BOOTPROTO="dhcp"` enables DHCP
-    - Ubuntu: in `/etc/network/interfaces` the `dhcp` parameter in line `iface eth0 inet dhcp` enables DHCP
+    - Fedora and Red Hat: enable DHCP in `/etc/sysconfig/network-scripts/ifcfg-<network iface name>` with `BOOTPROTO="dhcp"`
+    - Ubuntu: enable DHCP in `/etc/network/interfaces` with the `dhcp` parameter in line `iface eth0 inet dhcp`
     - Run DHCP client manually for network interface `eth0` with command: `sudo dhclient eth0`
     - Look for string `DHCP` in the system log to see what DHCP client did
     - Ubuntu: DHCP leases are in `/var/lib/dhcp/dhclient.leases`
 - Manual configuration
     - Config files: `/etc/sysconfig/network-scripts/ifcfg-<iface-name>` or `/etc/network/interfaces`
-    - sample `/etc/sysconfig/network-scripts/ifcfg-<iface-name>`
+    - example `/etc/sysconfig/network-scripts/ifcfg-<iface-name>`
 ```
 DEVICE="p2p1"
 BOOTPROTO="static"
@@ -994,11 +995,15 @@ ONBOOT="yes"
 ```
 
 ### Setting a default route
-- use `route` utility
+- a route describes which interface and gateway to take to reach a specific range of ip addresses
+- a default route, is the route taken when no other route applies to the destination ip address
+- use `route` utility to show the kernel routing table
 - Add a default route: `route add default gw 192.168.29.1`
+    - default route is shown in the `route` utility output as the line with destination `0.0.0.0`
 
 ### /etc/hostname
-- file that contains hostname of the machine (e.g. box1, mailserver) 
+- file containing hostname of the computer
+- the hostname is set from the value found in this file during boot time
 
 ### /etc/hosts
 - file containing mapping of IP addresses to hostnames
@@ -1007,10 +1012,10 @@ ONBOOT="yes"
     - used during system boot when no DNS is available
 
 ### /etc/nsswitch.conf
-- Name Service Switch config file
-- Used by GNU C library to determine the sources from which to obtain name-service information in a range of categories and in what order.
+- config file of Name Service Switch 
+- Used by GNU C library to determine sources from which to obtain name-service information, in a range of categories and in what order
 - The first column specifies the database
-- Example file:
+- Example:
 ```
 passwd:         compat
 group:          compat
@@ -1023,6 +1028,8 @@ protocols:      nis [NOTFOUND=return] files
 rpc:            nis [NOTFOUND=return] files
 services:       nis [NOTFOUND=return] files
 ```
+- the line starting with "hosts" configures host lookup first through dns and then though the hosts file (e.g. `/etc/hosts`)
+
 
 ### ifconfig
 - utility to configure a network interface
