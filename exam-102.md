@@ -848,7 +848,7 @@ Allow from @LOCAL
 ## 109.1 Fundamentals of internet protocols (weight 4)
 
 ### Demonstrate an understanding of network masks and CIDR notation
-- Network mask (aka subnet mask or netmast) is a number that identifies the portion of IP address that's a network address and the part that's computer address
+- Network mask (aka subnet mask or netmask) is a number that identifies the portion of IP address that's a network address and the part that's computer address
     - e.g. for IP address 134.5.66.123 and network mask 255.255.0.0, the network is 134.5 and computer is 66.123
     - network mask can also be written in short form (CIDR form): 134.5.66.123 with mask 255.255.255.0 is same as 134.5.6.123/24
 - CIDR (Classless Inter-Domain Routing) is a notation for representing a range of IP addresses
@@ -869,14 +869,13 @@ Allow from @LOCAL
 ### Knowledge of the differences between private and public “dotted quad” IP addresses
 - dotted quad notation shows all 4 bytes of IPv4 address or network mask as decimal numbers separated by a dot (e.g. 144.22.3.6 or 255.255.0.0)
 - public ip address is accessible from Internet
-- private address is accessible only from withing network
+- private address is accessible only from within network
 - reserved ranges of ip's for private use:
     - 10.0.0.0 - 10.255.255.255:  16,777,216 hosts (class A)
     - 172.16.0.0 - 172.31.255.255: 1,048,576 hosts (class B)
     - 192.168.0.0 - 192.168.255.255: 65,536 hosts (class C)
 
 ### Knowledge about common TCP and UDP ports and services (20, 21, 22, 23, 25, 53, 80, 110, 123, 139, 143, 161, 162, 389, 443, 465, 514, 636, 993, 995)
-
 - 20: ftp data port from which server sends data to client, in active mode
 - 21: ftp server command port, where initial client request arrives
 - 22: ssh, scp, sftp, port forwarding
@@ -943,9 +942,17 @@ Allow from @LOCAL
     - connectionless, best-effort, delivery not guaranteed
     - for packet-switched networks
     - a 32-bit address is assigned to each connected device
+	- Uses 32-bit numbers to represent network address
+		- address is independent of MAC address
+		- IPv4 address is expressed in dotted quad notation: 4 base-10 numbers separated by dots: e.g. 127.12.255.22
+		- each address can be broken down into two parts: network address and computer address
+			- makes routing much easier, no need for routers to have routing table for all addresses
 - IPv6
     - Internet Protocol version 6
     - replaces IPv4
+	- Uses 128-bit numbers to represent a network address
+		- notation: 8 groups of 4-digit hexadecimal numbers separated by colon: e.g. fed1:0db8:85a3:08d3:1319:8a2e:0370:7334
+	- can be made to depend on the MAC address
 
 ### Subnetting
 - process of designating some high-order bits from the host part and grouping them with the network mask to form the subnet mask
